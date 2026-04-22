@@ -3,6 +3,10 @@ import { SortableTable, ColumnDef } from './sortable-table'
 import { formatCurrency, formatDate } from '@/lib/formatters'
 import { FileText, TrendingUp } from 'lucide-react'
 
+function getDisplayCategory(item: any) {
+  return item?.categoriaExibicao || item?.categoriaOriginal || item?.categoria || 'Indefinido'
+}
+
 export function PrnDetails({
   details,
   type,
@@ -33,7 +37,16 @@ export function PrnDetails({
   ]
 
   const catCols: ColumnDef[] = [
-    { key: 'categoria', label: 'Categoria', render: (val) => val === 'Indefinido' ? <span className="text-amber-400 font-bold">Classificação Pendente ⚠️</span> : val },
+    {
+      key: 'categoria',
+      label: 'Categoria',
+      render: (_val, row) => {
+        const label = getDisplayCategory(row)
+        return label === 'Indefinido'
+          ? <span className="text-amber-400 font-bold">Classificação Pendente ⚠️</span>
+          : label
+      },
+    },
     { key: 'total', label: 'Valor Total', align: 'right', render: (val) => formatCurrency(val) },
     { key: 'count', label: 'Qtd', align: 'center' },
   ]

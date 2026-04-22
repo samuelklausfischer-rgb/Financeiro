@@ -7,14 +7,18 @@ import { cn } from '@/lib/utils'
 import { History, Filter, TrendingUp, TrendingDown, FileText, Search, ChevronDown, ChevronRight } from 'lucide-react'
 import { formatMonthName } from '@/lib/audit-utils'
 import { generateAuditPDF } from '@/lib/export-pdf'
-import { getCategoryLabel, getCompactCategoryLabel, getTaxSubcategoryLabel } from '@/lib/category-labels'
+import { getTaxSubcategoryLabel } from '@/lib/category-labels'
 import { PrnOmieLookupSheet } from './prn-omie-lookup-sheet'
+
+function getDisplayCategory(value: any) {
+  return value?.categoriaExibicao || value?.categoriaOriginal || value?.categoria || 'Indefinido'
+}
 
 function ExpandableRow({ row, months }: { row: any; months: string[] }) {
   const [expanded, setExpanded] = useState(false)
   const hasMultiple = (row.qtdTitulosDia || 1) > 1
   const hasHistory = row.temHistorico && Array.isArray(row.historyLines) && row.historyLines.length > 0
-  const compactCategory = getCompactCategoryLabel(row.categoria)
+  const displayCategory = getDisplayCategory(row)
 
   return (
     <>
@@ -57,7 +61,7 @@ function ExpandableRow({ row, months }: { row: any; months: string[] }) {
               {row.dailyLines.map((line: any, i: number) => (
                 <div key={i} className="flex items-center justify-between gap-2 text-[10px]">
                   <span className="text-white/50 truncate max-w-[180px]">
-                    {[line.departamento || 'Sem departamento', line.subcategoriaLabel || compactCategory].filter(Boolean).join(' | ')}
+                    {[line.departamento || 'Sem departamento', line.subcategoriaLabel || getDisplayCategory(line) || displayCategory].filter(Boolean).join(' | ')}
                   </span>
                   <span className="font-mono font-bold text-blue-300">{formatCurrency(line.valor)}</span>
                 </div>
@@ -71,7 +75,7 @@ function ExpandableRow({ row, months }: { row: any; months: string[] }) {
               {row.historyLines.slice(-6).map((line: any, i: number) => (
                 <div key={i} className="flex items-center justify-between gap-2 text-[10px]">
                   <span className="text-white/30 font-mono">{line.mes || line.vencimento || '—'}</span>
-                  <span className="text-[9px] text-blue-300/70 uppercase truncate max-w-[110px]">{line.subcategoriaLabel || compactCategory}</span>
+                  <span className="text-[9px] text-blue-300/70 uppercase truncate max-w-[110px]">{line.subcategoriaLabel || getDisplayCategory(line) || displayCategory}</span>
                   <span className="text-white/40 truncate max-w-[100px]">{line.sourceFile || ''}</span>
                   <span className="font-mono text-white/50">{formatCurrency(line.valor)}</span>
                 </div>
@@ -157,7 +161,7 @@ export function PrnCrossAnalysis({ data, fullPayload }: { data?: any, fullPayloa
       key: 'categoria',
       label: 'Categoria',
       render: (val: any, row: any) => {
-        const label = getCompactCategoryLabel(val || row.categoria)
+        const label = getDisplayCategory({ categoria: val, ...row })
         const subcategoria = row.subcategoria ? getTaxSubcategoryLabel(row.subcategoriaLabel || row.subcategoria) : null
         const isServico = row.tipo === 'servico'
         return (

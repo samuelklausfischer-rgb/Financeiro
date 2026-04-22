@@ -2,10 +2,10 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { formatCurrency, formatPercentage } from './formatters'
 import { formatMonthName } from './audit-utils'
-import { getCompactCategoryLabel, getTaxSubcategoryLabel } from './category-labels'
+import { getTaxSubcategoryLabel } from './category-labels'
 
 function buildDisplayCategory(row: any) {
-  const category = getCompactCategoryLabel(row.categoria)
+  const category = row.categoriaExibicao || row.categoriaOriginal || row.categoria || 'Indefinido'
   const subcategory = row.subcategoria
     ? getTaxSubcategoryLabel(row.subcategoriaLabel || row.subcategoria)
     : null
@@ -99,7 +99,7 @@ export async function generateAuditPDF(data: any) {
           isDetail: true,
           groupIndex: currentGroupIndex,
           values: [
-            `   ${index + 1}. ${line.departamento || 'Sem departamento'} | ${line.subcategoriaLabel || getCompactCategoryLabel(row.categoria)} | ${formatCurrency(line.valor)}`,
+            `   ${index + 1}. ${line.departamento || 'Sem departamento'} | ${line.subcategoriaLabel || line.categoriaExibicao || line.categoria || row.categoriaExibicao || row.categoriaOriginal || row.categoria || 'Indefinido'} | ${formatCurrency(line.valor)}`,
             ...months.map(() => ''),
             '',
             '',
