@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useRealtime } from '@/hooks/use-realtime'
-import { AlertCircle, CheckCircle2, Loader2, AlertTriangle, Info } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Loader2, AlertTriangle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
@@ -246,15 +246,6 @@ export function ResultsDashboard({ analysis: initialAnalysis }: { analysis: Anal
               colorClass="border-yellow-500/30 text-yellow-400"
             >
               <GroupedDataTable groups={result_json.nameRepeatManualGroups} />
-            </ResultBlock>
-
-            <ResultBlock
-              title="Estrutura Parcial"
-              description="Registros que apresentam semelhanças estruturais parciais (ex: mesmo valor e fornecedor em datas diferentes)."
-              icon={Info}
-              colorClass="border-blue-500/30 text-blue-400"
-            >
-              <DataTable records={result_json.partialStructureRecords} />
             </ResultBlock>
           </div>
         )}
