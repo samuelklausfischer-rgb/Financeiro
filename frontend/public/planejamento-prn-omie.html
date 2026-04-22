@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRN Financeiro + OMIE — Planejamento Estrategico</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121933;
+      --panel-2: #0f1530;
+      --line: rgba(255,255,255,0.08);
+      --text: #f4f7fb;
+      --muted: #a7b0c3;
+      --blue: #4ea3ff;
+      --green: #38c172;
+      --amber: #ffb020;
+      --red: #ff5d5d;
+      --purple: #9b7bff;
+      --cyan: #35d4ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(ellipse at top left, rgba(78,163,255,0.10), transparent 30%),
+        radial-gradient(ellipse at top right, rgba(155,123,255,0.08), transparent 26%),
+        linear-gradient(180deg, #09101e 0%, #0b1020 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 64px; }
+    .hero {
+      background: linear-gradient(135deg, rgba(78,163,255,0.14), rgba(155,123,255,0.10));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 40px 36px;
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      color: #dce7ff;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.08; margin-bottom: 10px; }
+    h2 { font-size: 26px; margin-bottom: 14px; }
+    h3 { font-size: 19px; margin-bottom: 10px; }
+    h4 { font-size: 15px; margin-bottom: 8px; }
+    p  { margin-bottom: 10px; color: var(--muted); }
+    strong { color: var(--text); }
+    a { color: var(--blue); text-decoration: none; }
+
+    .grid { display: grid; gap: 16px; }
+    .g2 { grid-template-columns: repeat(2, 1fr); }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 900px) { .g2,.g3,.g4 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.012));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+    }
+    .section { margin-top: 24px; }
+
+    .pill {
+      display: inline-block;
+      margin: 3px 6px 0 0;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(255,255,255,0.06);
+      color: #dce7ff;
+    }
+    .tag-ok  { background: rgba(56,193,114,0.14); color: #84e2a9; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .tag-gap { background: rgba(255,176,32,0.14); color: #ffd07c; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .tag-fut { background: rgba(155,123,255,0.14); color: #ccbaff; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .big { font-size: 36px; font-weight: 800; margin-bottom: 4px; }
+    .mini { font-size: 13px; color: var(--muted); }
+
+    .flow { display: grid; gap: 10px; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; align-items: center; }
+    @media (max-width: 900px) { .flow { grid-template-columns: 1fr; } .flow-arrow { transform: rotate(90deg); } }
+    .flow-box {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+    }
+    .flow-arrow { color: var(--muted); font-size: 24px; font-weight: 700; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; border-radius: 16px; overflow: hidden; margin-top: 8px; }
+    thead th {
+      text-align: left; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: #d8e1f3; background: rgba(255,255,255,0.04); padding: 13px 12px; border-bottom: 1px solid var(--line);
+    }
+    tbody td { padding: 13px 12px; border-bottom: 1px solid var(--line); color: var(--muted); vertical-align: top; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .steps { display: grid; gap: 14px; }
+    .step {
+      display: grid; grid-template-columns: 60px 1fr; gap: 16px; align-items: start;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+    }
+    .step-n {
+      height: 48px; width: 48px; display: flex; align-items: center; justify-content: center;
+      border-radius: 14px; background: linear-gradient(135deg, rgba(78,163,255,0.22), rgba(155,123,255,0.18));
+      color: white; font-size: 18px; font-weight: 800;
+    }
+
+    .note {
+      border-left: 4px solid var(--blue); padding: 14px 16px;
+      background: rgba(78,163,255,0.08); border-radius: 12px; color: #dbe8ff;
+    }
+    .note-amber {
+      border-left: 4px solid var(--amber); padding: 14px 16px;
+      background: rgba(255,176,32,0.08); border-radius: 12px; color: #ffe9b8;
+    }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+    .legend span { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+    .dot { width: 10px; height: 10px; border-radius: 999px; display: inline-block; }
+    .d-blue { background: var(--blue); }
+    .d-green { background: var(--green); }
+    .d-amber { background: var(--amber); }
+    .d-red { background: var(--red); }
+    .d-purple { background: var(--purple); }
+    .d-cyan { background: var(--cyan); }
+
+    .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .vs-box { border-radius: 18px; padding: 22px; }
+    .vs-now { background: rgba(255,176,32,0.06); border: 1px solid rgba(255,176,32,0.15); }
+    .vs-fut { background: rgba(56,193,114,0.06); border: 1px solid rgba(56,193,114,0.15); }
+    @media (max-width: 700px) { .vs { grid-template-columns: 1fr; } }
+
+    .group-label {
+      display: inline-block; padding: 6px 12px; border-radius: 12px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;
+    }
+    .gl-exec { background: rgba(78,163,255,0.12); color: #a0cfff; }
+    .gl-op { background: rgba(56,193,114,0.12); color: #8be8b5; }
+    .gl-aud { background: rgba(155,123,255,0.12); color: #c9baff; }
+
+    .profile-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    @media (max-width: 900px) { .profile-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .profile-grid { grid-template-columns: 1fr; } }
+    .profile-card {
+      background: var(--panel-2); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+    }
+    .profile-icon {
+      width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- CAPA -->
+    <section class="hero">
+      <div class="eyebrow">Planejamento Estrategico</div>
+      <h1>PRN Financas + OMIE</h1>
+      <p style="font-size: 18px; max-width: 680px;">
+        Como transformar a OMIE na <strong>fonte viva do financeiro</strong> da empresa,
+        conectando dados reais de pagar, receber, caixa e extrato direto na dashboard PRN Financas.
+      </p>
+      <div class="legend">
+        <span><i class="dot d-blue"></i> Fonte de dados</span>
+        <span><i class="dot d-green"></i> Ganho para o financeiro</span>
+        <span><i class="dot d-amber"></i> Lacuna atual</span>
+        <span><i class="dot d-purple"></i> Etapa futura</span>
+        <span><i class="dot d-cyan"></i> Ganho rapido</span>
+      </div>
+    </section>
+
+    <!-- NUMEROS -->
+    <section class="grid g4 section">
+      <div class="card">
+        <div class="big">1</div>
+        <h3>O que existe hoje</h3>
+        <p>A OMIE entra no projeto de forma pontual, apenas na consulta de itens do PRN.</p>
+      </div>
+      <div class="card">
+        <div class="big">11</div>
+        <h3>APIs analisadas</h3>
+        <p>Resumo, movimentos, titulos, caixa, extrato, PIX, boletos, contas a pagar, receber e contas correntes.</p>
+      </div>
+      <div class="card">
+        <div class="big">3</div>
+        <h3>Grandes blocos</h3>
+        <p>Visao executiva, operacao diaria do financeiro e conciliacao/inteligencia.</p>
+      </div>
+      <div class="card">
+        <div class="big">6</div>
+        <h3>Fases sugeridas</h3>
+        <p>Conexao, sincronizacao, dashboard, operacao, auditoria e inteligencia.</p>
+      </div>
+    </section>
+
+    <!-- HOJE X FUTURO -->
+    <section class="section card">
+      <h2>1. Onde estamos hoje x Onde podemos chegar</h2>
+      <div class="vs" style="margin-top: 12px;">
+        <div class="vs-box vs-now">
+          <h3 style="color: var(--amber);">Hoje</h3>
+          <p>Dashboard usa apenas dados locais de pagamentos e recebedores.</p>
+          <p>OMIE entra so em consulta pontual dentro do PRN.</p>
+          <p>Financeiro ainda depende de visao espalhada e planilhas paralelas.</p>
+          <p>Nao existe visao unificada de saldo, pagar, receber e extrato.</p>
+          <p style="margin-top: 10px;"><span class="tag-gap">Parcial</span></p>
+        </div>
+        <div class="vs-box vs-fut">
+          <h3 style="color: var(--green);">Futuro</h3>
+          <p>Dashboard alimentada diretamente pela OMIE em tempo real.</p>
+          <p>Visao de pagar, receber, extrato e caixa em uma unica tela.</p>
+          <p>Operacao financeira centralizada e mais rapida.</p>
+          <p>Conciliacao e auditoria entre PRN e OMIE automatizada.</p>
+          <p style="margin-top: 10px;"><span class="tag-ok">Completo</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- O QUE JA EXISTE -->
+    <section class="section card">
+      <h2>2. O que ja existe no projeto</h2>
+      <div class="grid g2">
+        <div>
+          <p><span class="tag-ok">Integracao atual</span></p>
+          <p>O projeto ja possui uma integracao OMIE pontual usada para consultar pagamentos e vincular com itens do PRN.</p>
+          <p class="mini">Arquivos: <code>src/services/prn-omie.ts</code> e <code>supabase/functions/prn-omie-lookup/index.ts</code></p>
+        </div>
+        <div>
+          <p><span class="tag-gap">O que falta</span></p>
+          <p>A dashboard principal <strong>ainda nao e alimentada amplamente pela OMIE</strong>. Ela usa apenas dados locais de pagamentos, recebedores e alertas.</p>
+          <p class="mini">Arquivo: <code>src/pages/dashboard/index.tsx</code></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FLUXO PRINCIPAL -->
+    <section class="section card">
+      <h2>3. Desenho simples da arquitetura</h2>
+      <p>Fluxo de como os dados da OMIE vao chegar ate a tela do financeiro:</p>
+      <div class="flow" style="margin-top: 16px;">
+        <div class="flow-box">
+          <h4>OMIE</h4>
+          <p class="mini">Dados oficiais do financeiro: pagar, receber, saldo, extrato, PIX, boletos.</p>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-box">
+          <h4>Integracao Segura</h4>
+          <p class="mini">Edge Function busca, trata e audita os dados antes de entregar ao site.</p>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-box">
+          <h4>Banco Local</h4>
+          <p class="mini">Dados organizados para leitura rapida e historico confiavel.</p>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-box">
+          <h4>PRN Financas</h4>
+          <p class="mini">Dashboard viva, telas operacionais e inteligencia financeira.</p>
+        </div>
+      </div>
+      <div class="note" style="margin-top: 18px;">
+        <strong>Regra importante:</strong> a OMIE nunca deve ser chamada diretamente do navegador com a chave de API.
+        Toda comunicacao passa por uma camada servidora segura.
+      </div>
+    </section>
+
+    <!-- MAPA DAS APIs -->
+    <section class="section card">
+      <h2>4. Mapa das APIs da OMIE por funcao</h2>
+
+      <div style="margin-top: 18px;">
+        <span class="group-label gl-exec">Visao Executiva</span>
+        <div class="grid g3" style="margin-top: 8px;">
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/resumo/</h4>
+            <p class="mini">Resumo do dia: saldo, a pagar, a receber, atrasos, categorias e fluxo de caixa.</p>
+            <p><span class="pill" style="background: rgba(78,163,255,0.12); color: #a0cfff;">Dashboard principal</span></p>
+          </div>
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/caixa/</h4>
+            <p class="mini">Orcamento de caixa: previsto x realizado por categoria e mes.</p>
+            <p><span class="pill" style="background: rgba(78,163,255,0.12); color: #a0cfff;">Previsto x Realizado</span></p>
+          </div>
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/extrato/</h4>
+            <p class="mini">Extrato por conta corrente com saldo anterior, atual, conciliado e movimentos.</p>
+            <p><span class="pill" style="background: rgba(78,163,255,0.12); color: #a0cfff;">Tela de extrato</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 22px;">
+        <span class="group-label gl-op">Operacao Diaria</span>
+        <div class="grid g4" style="margin-top: 8px;">
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/contapagar/</h4>
+            <p class="mini">Cadastro, listagem, baixa e cancelamento de contas a pagar.</p>
+          </div>
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/contareceber/</h4>
+            <p class="mini">Cadastro, listagem, baixa, conciliacao e repeticao de contas a receber.</p>
+          </div>
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/contareceberboleto/</h4>
+            <p class="mini">Gerar, obter, prorrogar e cancelar boleto de contas a receber.</p>
+          </div>
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/pix/</h4>
+            <p class="mini">Gerar QR Code, listar, consultar status e cancelar PIX.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 22px;">
+        <span class="group-label gl-aud">Conferencia e Auditoria</span>
+        <div class="grid g4" style="margin-top: 8px;">
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/pesquisartitulos/</h4>
+            <p class="mini">Busca detalhada de titulos com filtros e resumo de baixa.</p>
+          </div>
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/mf/</h4>
+            <p class="mini">Movimentacao financeira unificada: pagar, receber e conta corrente.</p>
+          </div>
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/financas/contacorrentelancamentos/</h4>
+            <p class="mini">Lancamentos da conta corrente, manuais e transferencias.</p>
+          </div>
+          <div class="card" style="background: var(--panel-2);">
+            <h4>/geral/contacorrente/</h4>
+            <p class="mini">Cadastro e listagem das contas correntes da empresa.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABELA DETALHADA -->
+    <section class="section card">
+      <h2>5. O que cada API entrega e onde entra no site</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>API</th>
+            <th>O que entrega</th>
+            <th>Onde entra na PRN</th>
+            <th>Beneficio para o financeiro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>/financas/resumo/</strong></td>
+            <td>Resumo do dia, contas a pagar, receber, saldo, atraso e categorias</td>
+            <td>Cards principais, visao executiva, alertas de atraso</td>
+            <td>Abre o dia ja vendo o raio-x completo</td>
+          </tr>
+          <tr>
+            <td><strong>/financas/mf/</strong></td>
+            <td>Movimentacao financeira unificada</td>
+            <td>Linha do tempo, feed operacional, filtros</td>
+            <td>Reduz tempo cruzando telas diferentes</td>
+          </tr>
+          <tr>
+            <td><strong>/financas/pesquisartitulos/</strong></td>
+            <td>Busca detalhada de titulos com filtros amplos</td>
+            <td>Busca avancada, conciliacao, investigacao</td>
+            <td>Valida se titulo existe, se ja foi baixado</td>
+          </tr>
+          <tr>
+            <td><strong>/financas/caixa/</strong></td>
+            <td>Orcamento de caixa: previsto x realizado</td>
+            <td>Painel de previsao, desvio por categoria</td>
+            <td>Mostra onde o realizado escapa do orcamento</td>
+          </tr>
+          <tr>
+            <td><strong>/financas/extrato/</strong></td>
+            <td>Extrato por conta com saldos e movimentos</td>
+            <td>Tela de extrato, visao bancaria, conciliacao</td>
+            <td>Centraliza a leitura do caixa real</td>
+          </tr>
+          <tr>
+            <td><strong>/financas/pix/</strong></td>
+            <td>Geracao, consulta e status de PIX</td>
+            <td>Painel de cobranca via PIX, rastreio</td>
+            <td>Velocidade de cobranca e visibilidade</td>
+          </tr>
+          <tr>
+            <td><strong>/financas/contareceberboleto/</strong></td>
+            <td>Gerar, obter, prorrogar e cancelar boleto</td>
+            <td>Carteira de cobranca, segunda via</td>
+            <td>Reduz idas a OMIE para cobranca</td>
+          </tr>
+          <tr>
+            <td><strong>/financas/contareceber/</strong></td>
+            <td>Cadastro, baixa, conciliacao de contas a receber</td>
+            <td>Contas a receber, inadimplencia, projecao</td>
+            <td>Visao real de recebiveis e cobranca</td>
+          </tr>
+          <tr>
+            <td><strong>/financas/contapagar/</strong></td>
+            <td>Cadastro, baixa, cancelamento de contas a pagar</td>
+            <td>Contas a pagar, vencimentos, fornecedores</td>
+            <td>Base do operacional diario</td>
+          </tr>
+          <tr>
+            <td><strong>/financas/contacorrentelancamentos/</strong></td>
+            <td>Lancamentos da conta corrente</td>
+            <td>Livro-caixa, ajustes, transferencias</td>
+            <td>Explica por que um saldo mudou</td>
+          </tr>
+          <tr>
+            <td><strong>/geral/contacorrente/</strong></td>
+            <td>Cadastro e listagem das contas correntes</td>
+            <td>Cadastro mestre, filtros por banco</td>
+            <td>Base de navegacao por conta bancaria</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- GANHOS -->
+    <section class="section card">
+      <h2>6. O que a PRN Financas pode ganhar com a OMIE</h2>
+      <div class="grid g3">
+        <div class="card" style="background: var(--panel-2);">
+          <h4>Saldo consolidado por conta</h4>
+          <p class="mini">Ver saldo real de cada conta corrente sem abrir o banco.</p>
+          <p><span class="tag-fut">Futuro</span></p>
+        </div>
+        <div class="card" style="background: var(--panel-2);">
+          <h4>Total a pagar hoje</h4>
+          <p class="mini">Saber exatamente quanto vence hoje e quais fornecedores pagar.</p>
+          <p><span class="pill" style="background: rgba(53,212,255,0.12); color: #a0efff;">Ganho rapido</span></p>
+        </div>
+        <div class="card" style="background: var(--panel-2);">
+          <h4>Total a receber hoje</h4>
+          <p class="mini">Projecao de entrada de caixa para o dia atual.</p>
+          <p><span class="pill" style="background: rgba(53,212,255,0.12); color: #a0efff;">Ganho rapido</span></p>
+        </div>
+        <div class="card" style="background: var(--panel-2);">
+          <h4>Atrasados</h4>
+          <p class="mini">Titulos vencidos e nao pagos ou nao recebidos, com alerta visual.</p>
+          <p><span class="pill" style="background: rgba(53,212,255,0.12); color: #a0efff;">Ganho rapido</span></p>
+        </div>
+        <div class="card" style="background: var(--panel-2);">
+          <h4>Previsto x Realizado</h4>
+          <p class="mini">Comparativo mensal por categoria para controle gerencial.</p>
+          <p><span class="tag-fut">Futuro</span></p>
+        </div>
+        <div class="card" style="background: var(--panel-2);">
+          <h4>Extrato por conta</h4>
+          <p class="mini">Movimentacoes de cada conta em leitura simples e visual.</p>
+          <p><span class="tag-fut">Futuro</span></p>
+        </div>
+        <div class="card" style="background: var(--panel-2);">
+          <h4>PIX com status</h4>
+          <p class="mini">Acompanhar cobranca PIX gerada, liquidada ou cancelada.</p>
+          <p><span class="tag-fut">Futuro</span></p>
+        </div>
+        <div class="card" style="background: var(--panel-2);">
+          <h4>Boletos emitidos</h4>
+          <p class="mini">Painel de boletos com link, codigo de barras e prorrogacao.</p>
+          <p><span class="tag-fut">Futuro</span></p>
+        </div>
+        <div class="card" style="background: var(--panel-2);">
+          <h4>Conciliacao PRN + OMIE</h4>
+          <p class="mini">Cruzar planilha PRN com titulos OMIE e apontar divergencias.</p>
+          <p><span class="tag-fut">Futuro</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PERFIS -->
+    <section class="section card">
+      <h2>7. Como cada perfil usaria no dia a dia</h2>
+      <div class="profile-grid" style="margin-top: 12px;">
+        <div class="profile-card">
+          <div class="profile-icon" style="background: rgba(78,163,255,0.14); color: var(--blue);">&#128188;</div>
+          <h4>Diretoria</h4>
+          <p class="mini">Ver saude financeira do dia, desvio de caixa, previsto x realizado e concentracao de atrasos.</p>
+        </div>
+        <div class="profile-card">
+          <div class="profile-icon" style="background: rgba(255,93,93,0.14); color: var(--red);">&#128179;</div>
+          <h4>Contas a Pagar</h4>
+          <p class="mini">Controlar vencimentos, acompanhar fornecedores, validar pagamento e baixar titulos.</p>
+        </div>
+        <div class="profile-card">
+          <div class="profile-icon" style="background: rgba(56,193,114,0.14); color: var(--green);">&#128176;</div>
+          <h4>Contas a Receber</h4>
+          <p class="mini">Acompanhar recebimentos, controlar boletos e PIX, ver inadimplencia e cobrar mais rapido.</p>
+        </div>
+        <div class="profile-card">
+          <div class="profile-icon" style="background: rgba(155,123,255,0.14); color: var(--purple);">&#127974;</div>
+          <h4>Tesouraria</h4>
+          <p class="mini">Ver saldos por conta, acompanhar extrato, conferir movimentacoes e apoiar conciliacao.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section class="section card">
+      <h2>8. Roadmap de implantacao por etapas</h2>
+      <div class="steps" style="margin-top: 14px;">
+
+        <div class="step">
+          <div class="step-n">1</div>
+          <div>
+            <h3>Conexao segura com OMIE</h3>
+            <p>Criar camada de integracao no servidor para consultar a OMIE com seguranca, logs e tratamento de erros. Nesta fase o site <strong>so le</strong>, nao escreve nada na OMIE.</p>
+            <p class="mini">Entrega: comunicacao funcionando, autenticacao validada, logs ativos.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">2</div>
+          <div>
+            <h3>Sincronizacao base</h3>
+            <p>Trazer para o banco local: contas correntes, contas a pagar, contas a receber, extrato e resumo financeiro. Isso cria uma base rapida e historica para a dashboard.</p>
+            <p class="mini">Entrega: tabelas locais alimentadas, dados organizados, historico preservado.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">3</div>
+          <div>
+            <h3>Dashboard viva</h3>
+            <p>Substituir os cards atuais por dados reais da OMIE: saldo, pagar, receber, atrasos, vencendo e previsto x realizado.</p>
+            <p class="mini">Entrega: painel executivo alimentado pela OMIE, atualizacao frequente.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">4</div>
+          <div>
+            <h3>Operacao diaria</h3>
+            <p>Criar ou reforcar telas de contas a pagar, contas a receber, boletos, PIX e extrato por conta.</p>
+            <p class="mini">Entrega: central de trabalho para o financeiro operar melhor.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">5</div>
+          <div>
+            <h3>Auditoria PRN + OMIE</h3>
+            <p>Cruzar dados da planilha PRN com titulos da OMIE. Gerar divergencias, alertas e recomendacoes de conciliacao.</p>
+            <p class="mini">Entrega: conferencia semi-automatica, reducao de retrabalho manual.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">6</div>
+          <div>
+            <h3>Inteligencia financeira</h3>
+            <p>Alertas automaticos, fornecedores criticos, categorias fora do padrao, desvio de caixa e titulos sem conciliacao.</p>
+            <p class="mini">Entrega: sistema proativo que avisa antes do problema.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PRIORIDADES -->
+    <section class="section card">
+      <h2>9. Priorizacao pratica</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Prioridade</th>
+            <th>Entrega</th>
+            <th>Por que vem primeiro</th>
+            <th>Fonte OMIE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color: var(--cyan);"><strong>Alta</strong></td>
+            <td>Resumo executivo do dia</td>
+            <td>Visao mais importante para gestao e financeiro</td>
+            <td><code>resumo</code>, <code>extrato</code></td>
+          </tr>
+          <tr>
+            <td style="color: var(--cyan);"><strong>Alta</strong></td>
+            <td>Contas a pagar com status real</td>
+            <td>Maior risco operacional diario</td>
+            <td><code>contapagar</code>, <code>pesquisartitulos</code></td>
+          </tr>
+          <tr>
+            <td style="color: var(--cyan);"><strong>Alta</strong></td>
+            <td>Contas a receber com cobranca</td>
+            <td>Impacta caixa e previsibilidade</td>
+            <td><code>contareceber</code>, <code>pix</code>, <code>boleto</code></td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);"><strong>Media</strong></td>
+            <td>Extrato por conta corrente</td>
+            <td>Ajuda conciliacao e leitura do caixa</td>
+            <td><code>contacorrente</code>, <code>extrato</code></td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);"><strong>Media</strong></td>
+            <td>Previsto x realizado por categoria</td>
+            <td>Controle gerencial forte</td>
+            <td><code>caixa</code>, <code>resumo</code></td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);"><strong>Media</strong></td>
+            <td>Busca e auditoria PRN + OMIE</td>
+            <td>Reduz retrabalho e conferencia manual</td>
+            <td><code>pesquisartitulos</code>, <code>mf</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- REGRAS -->
+    <section class="section card">
+      <h2>10. Regras para a integracao ser eficiente</h2>
+      <div class="grid g2">
+        <div>
+          <h3 style="color: var(--green);">O que fazer</h3>
+          <p>1. Usar OMIE como fonte confiavel de financeiro.</p>
+          <p>2. Salvar no banco local apenas o necessario para leitura rapida.</p>
+          <p>3. Manter historico das sincronizacoes e logs de erro.</p>
+          <p>4. Separar dados operacionais de dados analiticos.</p>
+          <p>5. Comecar por leitura antes de automacao de escrita.</p>
+        </div>
+        <div>
+          <h3 style="color: var(--red);">O que evitar</h3>
+          <p>1. Chamar OMIE direto do navegador com chave de API.</p>
+          <p>2. Misturar payload bruto da OMIE direto na interface.</p>
+          <p>3. Fazer cada card consultar uma API diferente em tempo real.</p>
+          <p>4. Criar telas sem camada de normalizacao.</p>
+          <p>5. Transformar PRN e OMIE em fontes conflitantes sem regra de precedencia.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GANHO RAPIDO -->
+    <section class="section card">
+      <h2>11. O que traz resultado mais rapido</h2>
+      <div class="note" style="margin-bottom: 16px;">
+        Se precisar mostrar valor logo no comeco, estas sao as entregas com maior impacto no menor prazo:
+      </div>
+      <div class="grid g3">
+        <div class="card" style="background: var(--panel-2); border-color: rgba(53,212,255,0.2);">
+          <h4 style="color: var(--cyan);">1. Painel do dia</h4>
+          <p class="mini">Usando <code>/financas/resumo/</code>, ja e possivel mostrar saldo, a pagar, a receber e atrasados em uma unica tela.</p>
+        </div>
+        <div class="card" style="background: var(--panel-2); border-color: rgba(53,212,255,0.2);">
+          <h4 style="color: var(--cyan);">2. Contas a pagar reais</h4>
+          <p class="mini">Usando <code>/financas/contapagar/</code>, o financeiro passa a ver titulos reais com vencimento e status atualizado.</p>
+        </div>
+        <div class="card" style="background: var(--panel-2); border-color: rgba(53,212,255,0.2);">
+          <h4 style="color: var(--cyan);">3. Extrato rapido</h4>
+          <p class="mini">Usando <code>/financas/extrato/</code>, da para mostrar saldo e ultimos movimentos por conta.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONCLUSAO -->
+    <section class="section" style="background: linear-gradient(135deg, rgba(78,163,255,0.10), rgba(155,123,255,0.08)); border: 1px solid var(--line); border-radius: 22px; padding: 30px;">
+      <h2>Conclusao pratica</h2>
+      <p style="font-size: 16px;">
+        A OMIE ja tem praticamente tudo o que a PRN Financas precisa para virar uma dashboard financeira forte:
+        <strong>saldo, pagar, receber, extrato, conta corrente, PIX, boleto, atrasos, orcamento e historico operacional</strong>.
+      </p>
+      <p style="font-size: 16px;">
+        O melhor caminho nao e comecar escrevendo na OMIE. O melhor caminho e:
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px;">
+        <div style="background: rgba(78,163,255,0.10); border-radius: 12px; padding: 14px; text-align: center;">
+          <strong>Etapa 1</strong><br><span class="mini">Leitura e sincronizacao</span>
+        </div>
+        <div style="background: rgba(56,193,114,0.10); border-radius: 12px; padding: 14px; text-align: center;">
+          <strong>Etapa 2</strong><br><span class="mini">Dashboard alimentada</span>
+        </div>
+        <div style="background: rgba(255,176,32,0.10); border-radius: 12px; padding: 14px; text-align: center;">
+          <strong>Etapa 3</strong><br><span class="mini">Telas operacionais</span>
+        </div>
+        <div style="background: rgba(155,123,255,0.10); border-radius: 12px; padding: 14px; text-align: center;">
+          <strong>Etapa 4</strong><br><span class="mini">Auditoria e inteligencia</span>
+        </div>
+      </div>
+      <div class="note-amber" style="margin-top: 18px;">
+        <strong>Em resumo:</strong> primeiro a PRN Financas passa a <strong>mostrar a verdade da OMIE</strong>.
+        Depois ela passa a <strong>ajudar o time a trabalhar melhor</strong>.
+        Depois ela passa a <strong>evitar erro, atraso e retrabalho</strong>.
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

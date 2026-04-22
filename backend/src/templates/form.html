@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Financeiro PRN</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f2f5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:#1a1a2e}
+.container{background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);width:100%;max-width:520px;padding:40px 36px}
+.header{text-align:center;margin-bottom:32px}
+.header h1{font-size:1.6rem;font-weight:700;color:#1a3a5c;margin-bottom:8px;letter-spacing:-.3px}
+.header p{font-size:.92rem;color:#6b7a8d;line-height:1.5}
+.form-group{margin-bottom:22px}
+.form-group label{display:block;font-size:.85rem;font-weight:600;color:#2c3e50;margin-bottom:8px}
+.form-group label .required{color:#e74c3c;margin-left:2px}
+.file-upload-wrapper{position:relative}
+.file-upload-wrapper input[type="file"]{display:none}
+.file-upload-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:18px 16px;border:2px dashed #b0c4d8;border-radius:8px;background:#f8fafc;color:#4a6fa5;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .2s ease}
+.file-upload-btn:hover{border-color:#2e6da4;background:#eef3f9}
+.file-upload-btn svg{width:22px;height:22px;flex-shrink:0}
+.file-upload-btn .file-name{font-weight:600;color:#1a3a5c;text-align:center;word-break:break-all}
+.file-upload-btn.has-file{border-color:#27ae60;border-style:solid;background:#f0faf4;color:#1e8449}
+.file-upload-btn.has-file svg{color:#27ae60}
+.file-size-error{font-size:.8rem;color:#e74c3c;margin-top:6px;display:none}
+.date-input{width:100%;padding:12px 14px;border:1.5px solid #cdd6e0;border-radius:8px;font-size:.9rem;color:#2c3e50;background:#f8fafc;transition:border-color .2s ease;font-family:inherit}
+.date-input:focus{outline:none;border-color:#2e6da4;background:#fff}
+.submit-btn{width:100%;padding:15px;background:linear-gradient(135deg,#1a5276,#2e86c1);color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s ease;margin-top:8px;letter-spacing:.2px}
+.submit-btn:hover{background:linear-gradient(135deg,#154360,#2471a3);transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,82,118,.3)}
+.submit-btn:active{transform:translateY(0)}
+.submit-btn:disabled{background:#95a5b6;cursor:not-allowed;transform:none;box-shadow:none}
+.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-message{background:#fef2f2;border:1px solid #f5c6cb;border-radius:8px;padding:14px 16px;margin-top:20px;display:none}
+.error-message .error-title{font-weight:600;color:#c0392b;font-size:.88rem;margin-bottom:4px}
+.error-message .error-text{font-size:.84rem;color:#721c24;line-height:1.5}
+.footer{text-align:center;margin-top:28px;font-size:.78rem;color:#95a5b6}
+@media(max-width:560px){
+  .container{padding:28px 20px;border-radius:10px}
+  .header h1{font-size:1.3rem}
+  .file-upload-btn{padding:14px 12px;font-size:.85rem}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Relatório Financeiro PRN</h1>
+    <p>Upload das planilhas para geração do relatório</p>
+  </div>
+
+  <form id="reportForm" method="POST" enctype="multipart/form-data" action="https://prndiag1.app.n8n.cloud/webhook/prn/report" novalidate>
+    <div class="form-group">
+      <label>Planilha Diária <span class="required">*</span></label>
+      <div class="file-upload-wrapper">
+        <div class="file-upload-btn" id="dailyDropZone" tabindex="0" role="button" aria-label="Selecionar Planilha Diária">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+          <span id="dailyLabel">Clique ou arraste a planilha (.xlsx)</span>
+        </div>
+        <input type="file" id="dailyFile" name="daily_file" accept=".xlsx">
+      </div>
+      <div class="file-size-error" id="dailySizeError">O arquivo excede o limite de 10MB.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Planilha Histórica PRN <span class="required">*</span></label>
+      <div class="file-upload-wrapper">
+        <div class="file-upload-btn" id="historicalDropZone" tabindex="0" role="button" aria-label="Selecionar Planilha Histórica PRN">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+          <span id="historicalLabel">Clique ou arraste a planilha (.xlsx)</span>
+        </div>
+        <input type="file" id="historicalFile" name="historical_file" accept=".xlsx">
+      </div>
+      <div class="file-size-error" id="historicalSizeError">O arquivo excede o limite de 10MB.</div>
+    </div>
+
+    <div class="form-group">
+      <label for="referenceDate">Data de Referência <span style="color:#95a5b6;font-weight:400">(opcional)</span></label>
+      <input type="date" id="referenceDate" name="reference_date" class="date-input">
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">Gerar Relatório</button>
+  </form>
+
+  <div class="error-message" id="errorMessage">
+    <div class="error-title">Erro ao processar</div>
+    <div class="error-text" id="errorText"></div>
+  </div>
+
+  <div class="footer">Sistema de Relatórios Financeiros</div>
+</div>
+
+<script>
+(function() {
+  var MAX_SIZE = 10 * 1024 * 1024;
+  var dailyFileInput = document.getElementById('dailyFile');
+  var historicalFileInput = document.getElementById('historicalFile');
+  var dailyDropZone = document.getElementById('dailyDropZone');
+  var historicalDropZone = document.getElementById('historicalDropZone');
+  var dailyLabel = document.getElementById('dailyLabel');
+  var historicalLabel = document.getElementById('historicalLabel');
+  var dailySizeError = document.getElementById('dailySizeError');
+  var historicalSizeError = document.getElementById('historicalSizeError');
+  var form = document.getElementById('reportForm');
+  var submitBtn = document.getElementById('submitBtn');
+  var errorMessage = document.getElementById('errorMessage');
+  var errorText = document.getElementById('errorText');
+
+  function handleFileSelect(input, dropZone, label, sizeError) {
+    input.addEventListener('change', function() {
+      sizeError.style.display = 'none';
+      if (input.files && input.files.length > 0) {
+        var file = input.files[0];
+        if (file.size > MAX_SIZE) {
+          input.value = '';
+          label.textContent = 'Clique ou arraste a planilha (.xlsx)';
+          dropZone.classList.remove('has-file');
+          sizeError.style.display = 'block';
+          return;
+        }
+        label.textContent = file.name;
+        dropZone.classList.add('has-file');
+      } else {
+        label.textContent = 'Clique ou arraste a planilha (.xlsx)';
+        dropZone.classList.remove('has-file');
+      }
+    });
+
+    dropZone.addEventListener('click', function() { input.click(); });
+    dropZone.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+    });
+
+    dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.style.borderColor = '#2e86c1'; });
+    dropZone.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      dropZone.style.borderColor = dropZone.classList.contains('has-file') ? '#27ae60' : '#b0c4d8';
+    });
+    dropZone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      dropZone.style.borderColor = '';
+      var files = e.dataTransfer.files;
+      if (files.length > 0) {
+        input.files = files;
+        input.dispatchEvent(new Event('change'));
+      }
+    });
+  }
+
+  handleFileSelect(dailyFileInput, dailyDropZone, dailyLabel, dailySizeError);
+  handleFileSelect(historicalFileInput, historicalDropZone, historicalLabel, historicalSizeError);
+
+  function showError(msg) {
+    errorText.textContent = msg;
+    errorMessage.style.display = 'block';
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    errorMessage.style.display = 'none';
+    dailySizeError.style.display = 'none';
+    historicalSizeError.style.display = 'none';
+
+    if (!dailyFileInput.files || dailyFileInput.files.length === 0) {
+      showError('Selecione a Planilha Diária para continuar.');
+      return;
+    }
+    if (!historicalFileInput.files || historicalFileInput.files.length === 0) {
+      showError('Selecione a Planilha Histórica PRN para continuar.');
+      return;
+    }
+    if (dailyFileInput.files[0].size > MAX_SIZE) {
+      dailySizeError.style.display = 'block';
+      return;
+    }
+    if (historicalFileInput.files[0].size > MAX_SIZE) {
+      historicalSizeError.style.display = 'block';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span>Processando...';
+
+    form.submit();
+  });
+})();
+</script>
+</body>
+</html>
