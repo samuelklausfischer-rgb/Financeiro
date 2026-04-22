@@ -221,6 +221,7 @@ const CROSS_CATEGORY_RAW_MAP = Object.fromEntries(
     // ---- Software / Sistemas ----
     'Sistemas/Softwares': 'software',
     'Sistemas/Software': 'software',
+    'SaaS - Software/Sistemas': 'software',
     Software: 'software',
     Sistemas: 'software',
 
@@ -244,6 +245,8 @@ const CROSS_CATEGORY_RAW_MAP = Object.fromEntries(
     'Plano de Saúde': 'salarios',
     'Vale Alimentacao': 'salarios',
     'Vale Alimentação': 'salarios',
+    'Adiantamento de Salarios': 'salarios',
+    'Adiantamento de Salários': 'salarios',
     'Vale Refeicao': 'vale_refeicao',
     'Vale Refeição': 'vale_refeicao',
     'Folha de Pagamento': 'salarios',
@@ -341,12 +344,16 @@ const CROSS_CATEGORY_RAW_MAP = Object.fromEntries(
     'Materiais Médicos': 'insumos',
     'Suprimentos Medicos': 'insumos',
     'Suprimentos Médicos': 'insumos',
+    'Gas e Oxigenio': 'insumos',
+    'Gás e Oxigênio': 'insumos',
 
     // ---- Manutenção ----
     'Reparos e instalacoes.': 'manutencao',
     'Reparos e instalações.': 'manutencao',
     'Reparos e Instalacoes': 'manutencao',
     'Reparos e Instalações': 'manutencao',
+    'Instalacoes e Reformas': 'reembolso_material',
+    'Instalações e Reformas': 'reembolso_material',
     'Manutencao geral': 'manutencao',
     'Manutenção geral': 'manutencao',
     'Manutencao Geral': 'manutencao',
@@ -407,6 +414,9 @@ const CROSS_CATEGORY_RAW_MAP = Object.fromEntries(
     'Aquisição de Equipamentos': 'reembolso_material',
     'Equipamentos Medicos': 'reembolso_material',
     'Equipamentos Médicos': 'reembolso_material',
+    'Compra de Material Hospitalar': 'reembolso_material',
+    'Material de Instalacoes, Manutencao e Reparo': 'reembolso_material',
+    'Material de Instalações, Manutenção e Reparo': 'reembolso_material',
 
     // ---- Salary-like (resolve por tipo de favorecido) ----
     'Servicos profissional tecnico': SALARY_LIKE_MARKER,
