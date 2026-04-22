@@ -8,7 +8,7 @@ import {
   listHistoryFiles,
   uploadHistoryFile,
   deleteHistoryFile,
-} from '@/services/prn'
+} from '@/services/prn_service'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 

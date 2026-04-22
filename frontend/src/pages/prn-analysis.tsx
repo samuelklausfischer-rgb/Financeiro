@@ -14,13 +14,13 @@ import {
   downloadHistoryFile,
   updatePrnRunPayload,
   markPrnRunAsError,
-} from '@/services/prn'
+} from '@/services/prn_service'
 import { useToast } from '@/hooks/use-toast'
 
-import { LoadingState, ErrorState } from '@/components/prn/prn-states'
-import { PrnUploadForm, formSchema } from '@/components/prn/prn-upload-form'
-import { PrnHistoryTable } from '@/components/prn/prn-history-table'
-import { PrnReportView } from '@/components/prn/prn-report-view'
+import { LoadingState, ErrorState } from '@/components/prn_core/prn-states'
+import { PrnUploadForm, formSchema } from '@/components/prn_core/prn-upload-form'
+import { PrnHistoryTable } from '@/components/prn_core/prn-history-table'
+import { PrnReportView } from '@/components/prn_core/prn-report-view'
 import { parsePrnDailyReceipts } from '@/lib/prn-daily-parser'
 import { extractHistoricalRows } from '@/lib/prn-history-workbook'
 
