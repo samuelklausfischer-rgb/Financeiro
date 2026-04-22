@@ -1,0 +1,10 @@
+-- Base limpa por decisao de migracao.
+--
+-- Este projeto passa a usar Supabase com usuarios e dados novos.
+-- Nao existe seed operacional padrao para evitar:
+-- 1. credenciais demo em auth.users
+-- 2. cadastros ficticios confundindo a base real
+-- 3. historicos antigos sendo carregados sem validacao
+--
+-- Se precisar popular ambiente de homologacao depois,
+-- crie um seed separado e seguro para esse contexto.

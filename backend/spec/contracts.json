@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "request": {
+    "daily_file": "binary (xlsx)",
+    "historical_file": "binary (xlsx, podendo ser um workbook consolidado a partir de multiplos historicos)",
+    "reference_date": "YYYY-MM-DD | null",
+    "scope": "prn"
+  },
+  "validation": {
+    "maxFileSizeBytes": 10485760,
+    "allowedExtensions": [".xlsx"],
+    "requiredSheetsDaily": ["Contas", "Recebido"],
+    "optionalSheetsDaily": ["Resumo"],
+    "requiredSheetsHistory": ["financas"],
+    "minColumnsDaily": 4,
+    "minRowsDaily": 3
+  },
+  "response": {
+    "ok": "boolean",
+    "schemaVersion": 1,
+    "type": "prn_dashboard_payload",
+    "status": "success | warning | error",
+    "requestId": "string (uuid)",
+    "referenceDateUsed": "YYYY-MM-DD",
+    "generatedAt": "ISO_DATETIME",
+    "request": {
+      "scope": "prn",
+      "dailyFilename": "string",
+      "historyFilename": "string",
+      "dailySheetsFound": ["string"],
+      "historySheetsFound": ["string"]
+    },
+    "summary": {
+      "totalDespesas": "number",
+      "totalRecebido": "number",
+      "saldoBancario": "number",
+      "saldoAplicacoes": "number",
+      "transferenciaNecessaria": "number"
+    },
+    "dashboard": {
+      "cards": "object (cards prontos para UI)",
+      "crossAnalysis": {
+        "months": ["YYYY-MM"],
+        "totals": "object",
+        "config": "object",
+        "groups": "object"
+      },
+      "alerts": "object"
+    },
+    "data": {
+      "entities": [
+        {
+          "code": "prn_matriz | prn_locacao | prn_holding",
+          "label": "string",
+          "saldoBancario": "number",
+          "saldoAplicacoes": "number",
+          "despesas": "number",
+          "recebido": "number"
+        }
+      ],
+      "expenses": [
+        {
+          "entity": "string",
+          "vencimento": "YYYY-MM-DD | null",
+          "favorecido": "string",
+          "categoria": "string",
+          "departamento": "string | null",
+          "valor": "number",
+          "parcela": "string | null",
+          "contaCorrente": "string | null",
+          "observacao": "string | null"
+        }
+      ],
+      "receipts": [
+        {
+          "entity": "string",
+          "data": "YYYY-MM-DD | null",
+          "descricao": "string",
+          "contaCorrente": "string",
+          "valor": "number",
+          "categoria": "string | null",
+          "conciliado": "string | null"
+        }
+      ],
+      "balances": [
+        {
+          "entity": "string",
+          "contaCorrente": "string",
+          "saldo": "number"
+        }
+      ],
+      "topDespesas": "array",
+      "despesasPorCategoria": "array",
+      "recebidosPorConta": "array",
+      "history": {
+        "periodStart": "YYYY-MM-DD",
+        "periodEnd": "YYYY-MM-DD",
+        "totalRecords": "number",
+        "totalPago": "number",
+        "totalAtrasado": "number",
+        "topCategorias": [{"categoria": "string", "total": "number"}],
+        "topFornecedores": [{"fornecedor": "string", "total": "number"}],
+        "distribuicaoContas": [{"conta": "string", "total": "number"}]
+      },
+      "crossAnalysis": "object (rows + groups para tabelas)"
+    },
+    "warnings": [
+      {
+        "code": "string",
+        "severity": "info | low | medium | high",
+        "message": "string",
+        "details": "object | null"
+      }
+    ],
+    "errors": [
+      {
+        "code": "string",
+        "message": "string",
+        "details": "object | null"
+      }
+    ],
+    "meta": {
+      "requestId": "string",
+      "httpStatus": "number"
+    }
+  },
+  "errorResponse": {
+    "ok": false,
+    "schemaVersion": 1,
+    "error": {
+      "code": "string",
+      "message": "string",
+      "details": "object | null"
+    },
+    "meta": {
+      "requestId": "string",
+      "generatedAt": "ISO_DATETIME",
+      "httpStatus": "number"
+    }
+  }
+}

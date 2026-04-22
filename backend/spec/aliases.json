@@ -1,0 +1,41 @@
+{
+  "entities": {
+    "prn_matriz": ["PRN MATRIZ", "PRN", "PRN DIAGNOSTICOS", "PRN DIAGNOSTICOS IMAGEM"],
+    "prn_locacao": ["PRN LOCA\u00c7\u00c3O", "PRN LOCA\u00c7AO", "PRN LOCACAO", "PRN LOCA\u00c7\u00d5ES"],
+    "prn_holding": ["PRN HOLDING", "HOLDING PRN"]
+  },
+  "contasCorrente": {
+    "omie_cash": ["Omie.CASH", "Omie Cash", "OMIE CASH", "Omie"],
+    "centrais_unicreds_itajai": ["Centrais Unicreds Itaja\u00ed", "Centrais Unicreds Itajai", "Centrais Unicreds"],
+    "centrais_unicreds_ijuí": ["Centrais Unicreds Iju\u00ed", "Centrais Unicreds Ijui"],
+    "banco_do_brasil": ["Banco do Brasil", "BB"],
+    "bradesco": ["Bradesco"],
+    "santander": ["Santander"],
+    "caixa": ["Caixa Econ\u00f4mica", "Caixa", "CAIXA"],
+    "itau": ["Ita\u00fa", "Itau", "ITA\u00da"],
+    "sicredi": ["Sicredi"]
+  },
+  "categorias": {
+    "aluguel": ["Aluguel", "Alugu\u00e9is"],
+    "energia": ["Energia", "Energia El\u00e9trica", "Conta de Luz"],
+    "telefonia": ["Telefonia", "Telefone", "Internet", "Telecom"],
+    "salarios": ["Sal\u00e1rios", "Salarios", "Folha de Pagamento", "Folha", "Pr\u00f3-labore", "Pro-labore"],
+    "impostos": ["Impostos", "Tributos", "Taxas", "ISS", "ICMS", "IRPJ", "CSLL", "PIS", "COFINS", "INSS"],
+    "insumos": ["Insumos", "Materiais", "Suprimentos"],
+    "manutencao": ["Manuten\u00e7\u00e3o", "Manutencao", "Consertos"],
+    "software": ["Software", "Sistemas", "Licen\u00e7as", "Licencas", "Assinaturas"],
+    "marketing": ["Marketing", "Publicidade", "Divulga\u00e7\u00e3o"],
+    "transporte": ["Transporte", "Combust\u00edvel", "Combustivel", "Frota"],
+    "veiculos_socios": ["Ve\u00edculos (S\u00f3cios)", "Veiculos (Socios)", "Ve\u00edculos S\u00f3cios", "Veiculos Socios"],
+    "seguros": ["Seguros", "Seguro"],
+    "profissionais": ["Profissionais", "Consultoria", "Honor\u00e1rios", "Honorarios", "Auditoria", "Contabilidade"],
+    "utilities": ["\u00c1gua", "Agua", "G\u00e1s", "Gas", "Condom\u00ednio", "Condominio"]
+  },
+  "statusPagamento": {
+    "pago": ["Pago", "PAGO", "Pago"],
+    "atrasado": ["Atrasado", "ATRASADO"],
+    "pago_parcialmente": ["Pago Parcialmente", "Pago parcialmente"],
+    "pendente": ["Pendente", "PENDENTE", "A Pagar", "a pagar"],
+    "cancelado": ["Cancelado", "CANCELADO"]
+  }
+}

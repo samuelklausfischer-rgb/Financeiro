@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Framework de Atualizacao do PRN Financeiro</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121933;
+      --panel-2: #0f1530;
+      --line: rgba(255,255,255,0.08);
+      --text: #f4f7fb;
+      --muted: #a7b0c3;
+      --blue: #4ea3ff;
+      --green: #38c172;
+      --amber: #ffb020;
+      --red: #ff5d5d;
+      --purple: #9b7bff;
+      --cyan: #35d4ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(ellipse at top left, rgba(78,163,255,0.10), transparent 30%),
+        radial-gradient(ellipse at top right, rgba(155,123,255,0.08), transparent 26%),
+        linear-gradient(180deg, #09101e 0%, #0b1020 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 64px; }
+    .hero {
+      background: linear-gradient(135deg, rgba(78,163,255,0.14), rgba(155,123,255,0.10));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 40px 36px;
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      display: inline-block; padding: 8px 14px; border-radius: 999px;
+      background: rgba(255,255,255,0.06); color: #dce7ff;
+      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px;
+    }
+    h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.08; margin-bottom: 10px; }
+    h2 { font-size: 26px; margin-bottom: 14px; }
+    h3 { font-size: 19px; margin-bottom: 10px; }
+    h4 { font-size: 15px; margin-bottom: 8px; }
+    p  { margin-bottom: 10px; color: var(--muted); }
+    strong { color: var(--text); }
+    code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
+
+    .grid { display: grid; gap: 16px; }
+    .g2 { grid-template-columns: repeat(2, 1fr); }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+    .g5 { grid-template-columns: repeat(5, 1fr); }
+    @media (max-width: 900px) { .g2,.g3,.g4,.g5 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.012));
+      border: 1px solid var(--line); border-radius: 18px; padding: 22px;
+    }
+    .section { margin-top: 24px; }
+
+    .pill {
+      display: inline-block; margin: 3px 6px 0 0; padding: 6px 10px; border-radius: 999px;
+      font-size: 12px; background: rgba(255,255,255,0.06); color: #dce7ff;
+    }
+    .tag-ok  { background: rgba(56,193,114,0.14); color: #84e2a9; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .tag-gap { background: rgba(255,176,32,0.14); color: #ffd07c; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .tag-fut { background: rgba(155,123,255,0.14); color: #ccbaff; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .tag-cyan { background: rgba(53,212,255,0.14); color: #a0efff; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .big { font-size: 36px; font-weight: 800; margin-bottom: 4px; }
+    .mini { font-size: 13px; color: var(--muted); }
+
+    .flow { display: grid; gap: 8px; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr; align-items: center; }
+    @media (max-width: 1100px) { .flow { grid-template-columns: 1fr; } .flow-arrow { transform: rotate(90deg); } }
+    .flow-box {
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: 16px; padding: 16px; text-align: center; min-width: 0;
+    }
+    .flow-arrow { color: var(--muted); font-size: 22px; font-weight: 700; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; border-radius: 16px; overflow: hidden; margin-top: 8px; }
+    thead th {
+      text-align: left; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: #d8e1f3; background: rgba(255,255,255,0.04); padding: 13px 12px; border-bottom: 1px solid var(--line);
+    }
+    tbody td { padding: 13px 12px; border-bottom: 1px solid var(--line); color: var(--muted); vertical-align: top; font-size: 14px; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .steps { display: grid; gap: 14px; }
+    .step {
+      display: grid; grid-template-columns: 60px 1fr; gap: 16px; align-items: start;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+    }
+    .step-n {
+      height: 48px; width: 48px; display: flex; align-items: center; justify-content: center;
+      border-radius: 14px; background: linear-gradient(135deg, rgba(78,163,255,0.22), rgba(155,123,255,0.18));
+      color: white; font-size: 18px; font-weight: 800;
+    }
+
+    .note {
+      border-left: 4px solid var(--blue); padding: 14px 16px;
+      background: rgba(78,163,255,0.08); border-radius: 12px; color: #dbe8ff;
+    }
+    .note-amber {
+      border-left: 4px solid var(--amber); padding: 14px 16px;
+      background: rgba(255,176,32,0.08); border-radius: 12px; color: #ffe9b8;
+    }
+    .note-green {
+      border-left: 4px solid var(--green); padding: 14px 16px;
+      background: rgba(56,193,114,0.08); border-radius: 12px; color: #b8f0cc;
+    }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+    .legend span { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+    .dot { width: 10px; height: 10px; border-radius: 999px; display: inline-block; }
+    .d-blue { background: var(--blue); }
+    .d-green { background: var(--green); }
+    .d-amber { background: var(--amber); }
+    .d-red { background: var(--red); }
+    .d-purple { background: var(--purple); }
+    .d-cyan { background: var(--cyan); }
+
+    .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .vs-box { border-radius: 18px; padding: 22px; }
+    .vs-now { background: rgba(255,176,32,0.06); border: 1px solid rgba(255,176,32,0.15); }
+    .vs-fut { background: rgba(56,193,114,0.06); border: 1px solid rgba(56,193,114,0.15); }
+    @media (max-width: 700px) { .vs { grid-template-columns: 1fr; } }
+
+    .profile-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    @media (max-width: 960px) { .profile-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .profile-grid { grid-template-columns: 1fr; } }
+    .profile-card {
+      background: var(--panel-2); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+    }
+    .profile-icon {
+      width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 10px;
+    }
+
+    .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    @media (max-width: 900px) { .module-grid { grid-template-columns: 1fr; } }
+    .module-card {
+      background: var(--panel-2); border: 1px solid var(--line); border-radius: 16px; padding: 20px;
+    }
+    .module-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 10px; font-size: 14px; font-weight: 800; color: white;
+      background: linear-gradient(135deg, rgba(78,163,255,0.22), rgba(155,123,255,0.18));
+      margin-bottom: 8px;
+    }
+
+    .schema-flow { display: grid; gap: 10px; grid-template-columns: repeat(7, 1fr); }
+    @media (max-width: 960px) { .schema-flow { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .schema-flow { grid-template-columns: 1fr; } }
+    .schema-box {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+      padding: 14px; text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- CAPA -->
+    <section class="hero">
+      <div class="eyebrow">Blueprint Executivo</div>
+      <h1>Framework de Atualizacao do PRN Financeiro</h1>
+      <p style="font-size: 18px; max-width: 720px;">
+        Como estruturar <strong>PRN, OMIE e Supabase</strong> para operar o financeiro com mais
+        <strong>controle</strong>, <strong>velocidade</strong> e <strong>inteligencia</strong>.
+      </p>
+      <div class="legend">
+        <span><i class="dot d-blue"></i> Integracao</span>
+        <span><i class="dot d-green"></i> Ganho operacional</span>
+        <span><i class="dot d-amber"></i> Lacuna atual</span>
+        <span><i class="dot d-purple"></i> Evolucao futura</span>
+        <span><i class="dot d-cyan"></i> Ganho rapido</span>
+      </div>
+    </section>
+
+    <!-- RESUMO EXECUTIVO -->
+    <section class="grid g4 section">
+      <div class="card">
+        <div class="big" style="color: var(--blue);">OMIE</div>
+        <h3>Fonte oficial operacional</h3>
+        <p>Todos os dados financeiros vitais passam a vir da OMIE de forma segura e controlada.</p>
+      </div>
+      <div class="card">
+        <div class="big" style="color: var(--purple);">PRN</div>
+        <h3>Camada de inteligencia</h3>
+        <p>A PRN vira operacao assistida, auditoria cruzada e cockpit financeiro.</p>
+      </div>
+      <div class="card">
+        <div class="big" style="color: var(--green);">Supabase</div>
+        <h3>Base de integracao</h3>
+        <p>Framework de sincronizacao, historico, seguranca e leitura rapida.</p>
+      </div>
+      <div class="card">
+        <div class="big" style="color: var(--cyan);">Rollout</div>
+        <h3>Sem romper a operacao</h3>
+        <p>Evolucao por fases, validacao em shadow mode e corte por dominio.</p>
+      </div>
+    </section>
+
+    <!-- PROBLEMA ATUAL -->
+    <section class="section card">
+      <h2>1. O problema que o framework resolve</h2>
+      <div class="vs" style="margin-top: 12px;">
+        <div class="vs-box vs-now">
+          <h3 style="color: var(--amber);">Hoje</h3>
+          <p>A OMIE entra de forma pontual, so na consulta de itens do PRN.</p>
+          <p>A dashboard principal ainda e alimentada por dados locais.</p>
+          <p>O dominio financeiro esta fragmentado entre payload, ajustes manuais e mock.</p>
+          <p>Nao existe um mecanismo reutilizavel de atualizacao financeira.</p>
+          <p style="margin-top: 10px;"><span class="tag-gap">Parcial</span></p>
+        </div>
+        <div class="vs-box vs-fut">
+          <h3 style="color: var(--green);">Com o framework</h3>
+          <p>A OMIE vira fonte oficial, alimentando a dashboard em tempo util.</p>
+          <p>O modelo financeiro e canonico, normalizado e auditavel.</p>
+          <p>Leitura operacional e analitica ficam separadas e performaticas.</p>
+          <p>O sistema evolui por fases com baixo risco e rollback seguro.</p>
+          <p style="margin-top: 10px;"><span class="tag-ok">Estruturado</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FLUXO DO FRAMEWORK -->
+    <section class="section card">
+      <h2>2. Visao do framework</h2>
+      <p>Fluxo central de como os dados viajam da OMIE ate a tela do financeiro:</p>
+      <div class="flow" style="margin-top: 16px;">
+        <div class="flow-box">
+          <h4>OMIE</h4>
+          <p class="mini">Fonte oficial</p>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-box">
+          <h4>Gateway</h4>
+          <p class="mini">Autenticacao e retry</p>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-box">
+          <h4>Sync Control</h4>
+          <p class="mini">Jobs e cursores</p>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-box">
+          <h4>Raw</h4>
+          <p class="mini">Payload original</p>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-box" style="border-color: rgba(78,163,255,0.25);">
+          <h4 style="color: var(--blue);">Core Financeiro</h4>
+          <p class="mini">Modelo canonico</p>
+        </div>
+      </div>
+      <div class="flow" style="margin-top: 10px;">
+        <div class="flow-box" style="border-color: rgba(56,193,114,0.25);">
+          <h4 style="color: var(--green);">Leitura Operacional</h4>
+          <p class="mini">Filas, titulos, saldos</p>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-box" style="border-color: rgba(155,123,255,0.25);">
+          <h4 style="color: var(--purple);">Leitura Analitica</h4>
+          <p class="mini">KPIs, aging, forecast</p>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-box" style="border-color: rgba(53,212,255,0.25);">
+          <h4 style="color: var(--cyan);">PRN Financas</h4>
+          <p class="mini">Dashboard + Operacao</p>
+        </div>
+        <div class="flow-arrow" style="visibility: hidden;">&#8594;</div>
+        <div class="flow-box" style="border-color: rgba(255,176,32,0.25);">
+          <h4 style="color: var(--amber);">Reconciliacao</h4>
+          <p class="mini">PRN x OMIE</p>
+        </div>
+        <div class="flow-arrow" style="visibility: hidden;">&#8594;</div>
+        <div class="flow-box" style="border-color: rgba(255,93,93,0.25);">
+          <h4 style="color: var(--red);">Observabilidade</h4>
+          <p class="mini">Logs e auditoria</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULOS -->
+    <section class="section card">
+      <h2>3. Modulos do framework</h2>
+      <div class="module-grid" style="margin-top: 16px;">
+
+        <div class="module-card">
+          <div class="module-num">1</div>
+          <h4>Integration Gateway</h4>
+          <p class="mini">Camada unica server-side para falar com a OMIE. Autenticacao, retry, throttle, padronizacao de erro e isolamento da chave.</p>
+          <p><span class="tag-ok">Essencial</span></p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-num">2</div>
+          <h4>Sync Control Plane</h4>
+          <p class="mini">Controla o que sincroniza, quando, qual janela, status, cursor, replay, falhas e reprocessamento.</p>
+          <p><span class="tag-ok">Essencial</span></p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-num">3</div>
+          <h4>Raw Ingestion</h4>
+          <p class="mini">Aterrissagem do dado bruto da OMIE. Preserva payload original para auditoria e replay futuro.</p>
+          <p><span class="tag-ok">Essencial</span></p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-num">4</div>
+          <h4 style="color: var(--blue);">Canonical Finance Core</h4>
+          <p class="mini">Modelo canonico interno: pagar, receber, liquidacoes, conta corrente, contrapartes e categorias.</p>
+          <p><span class="tag-ok">Essencial</span></p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-num">5</div>
+          <h4 style="color: var(--green);">Operational Read Models</h4>
+          <p class="mini">Filas de pagar, receber, titulos vencidos, saldos, visao por conta, fornecedor e cliente.</p>
+          <p><span class="tag-cyan">Ganho rapido</span></p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-num">6</div>
+          <h4 style="color: var(--amber);">Reconciliation &amp; Exceptions</h4>
+          <p class="mini">Divergencias PRN x OMIE, inconsistencias de baixa, categoria nao mapeada, caso operacional humano.</p>
+          <p><span class="tag-fut">Fase 5</span></p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-num">7</div>
+          <h4 style="color: var(--purple);">Analytics &amp; Executive Marts</h4>
+          <p class="mini">Aging, previsto x realizado, inadimplencia, concentracao, fluxo de caixa e KPIs executivos.</p>
+          <p><span class="tag-fut">Fase 3-6</span></p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-num">8</div>
+          <h4>API &amp; Experience Layer</h4>
+          <p class="mini">Views estaveis, endpoints server-side, cache e contrato de leitura para o frontend.</p>
+          <p><span class="tag-ok">Essencial</span></p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-num">9</div>
+          <h4 style="color: var(--red);">Observability &amp; Audit</h4>
+          <p class="mini">Logs estruturados, metricas de sync, trilha de auditoria e saude da integracao.</p>
+          <p><span class="tag-ok">Essencial</span></p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- O QUE MUDA POR PERFIL -->
+    <section class="section card">
+      <h2>4. O que muda para o time do financeiro</h2>
+      <div class="profile-grid" style="margin-top: 12px;">
+        <div class="profile-card">
+          <div class="profile-icon" style="background: rgba(78,163,255,0.14); color: var(--blue);">&#128188;</div>
+          <h4>Diretoria</h4>
+          <p class="mini">Abre a PRN e ve caixa, pagar, receber, atrasos e previsto x realizado sem pedir levantamento manual.</p>
+        </div>
+        <div class="profile-card">
+          <div class="profile-icon" style="background: rgba(255,93,93,0.14); color: var(--red);">&#128179;</div>
+          <h4>Contas a Pagar</h4>
+          <p class="mini">Trabalha por fila priorizada de vencimentos, com controle de fornecedor, forma de pagamento e aprovacao.</p>
+        </div>
+        <div class="profile-card">
+          <div class="profile-icon" style="background: rgba(56,193,114,0.14); color: var(--green);">&#128176;</div>
+          <h4>Contas a Receber</h4>
+          <p class="mini">Opera carteira, cobranca, boleto e PIX com rastreabilidade, aging e visao de inadimplencia.</p>
+        </div>
+        <div class="profile-card">
+          <div class="profile-icon" style="background: rgba(155,123,255,0.14); color: var(--purple);">&#127974;</div>
+          <h4>Tesouraria</h4>
+          <p class="mini">Ve saldo por conta, extrato, movimentos e apoia conciliacao com clareza.</p>
+        </div>
+        <div class="profile-card">
+          <div class="profile-icon" style="background: rgba(255,176,32,0.14); color: var(--amber);">&#128270;</div>
+          <h4>Auditoria</h4>
+          <p class="mini">Ganha trilha de decisao, excecao, resolucao e evidencia de conciliacao.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATRIZ OMIE -->
+    <section class="section card">
+      <h2>5. Matriz: Endpoint OMIE x Modulo PRN</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Endpoint OMIE</th>
+            <th>Modulo PRN principal</th>
+            <th>Beneficio direto</th>
+            <th>Prioridade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>/financas/resumo/</code></td>
+            <td>Dashboard executiva</td>
+            <td>Visao imediata do dia</td>
+            <td style="color: var(--cyan);"><strong>Alta</strong></td>
+          </tr>
+          <tr>
+            <td><code>/financas/extrato/</code></td>
+            <td>Tesouraria e extrato</td>
+            <td>Saldo real e movimentos por conta</td>
+            <td style="color: var(--cyan);"><strong>Alta</strong></td>
+          </tr>
+          <tr>
+            <td><code>/geral/contacorrente/</code></td>
+            <td>Cadastro mestre bancario</td>
+            <td>Base das contas e filtros</td>
+            <td style="color: var(--cyan);"><strong>Alta</strong></td>
+          </tr>
+          <tr>
+            <td><code>/financas/contapagar/</code></td>
+            <td>Esteira de contas a pagar</td>
+            <td>Vencimentos, fila e execucao</td>
+            <td style="color: var(--cyan);"><strong>Alta</strong></td>
+          </tr>
+          <tr>
+            <td><code>/financas/contareceber/</code></td>
+            <td>Carteira de recebiveis</td>
+            <td>Cobranca, aging e baixa</td>
+            <td style="color: var(--cyan);"><strong>Alta</strong></td>
+          </tr>
+          <tr>
+            <td><code>/financas/pix/</code></td>
+            <td>Cobranca digital</td>
+            <td>Status e rastreio do PIX</td>
+            <td style="color: var(--amber);">Media/Alta</td>
+          </tr>
+          <tr>
+            <td><code>/financas/contareceberboleto/</code></td>
+            <td>Cobranca por boleto</td>
+            <td>Emissao, link e prorrogacao</td>
+            <td style="color: var(--amber);">Media/Alta</td>
+          </tr>
+          <tr>
+            <td><code>/financas/mf/</code></td>
+            <td>Timeline e auditoria</td>
+            <td>Visao unificada de movimentos</td>
+            <td style="color: var(--amber);">Media/Alta</td>
+          </tr>
+          <tr>
+            <td><code>/financas/pesquisartitulos/</code></td>
+            <td>Busca e investigacao</td>
+            <td>Localizar titulos e validar</td>
+            <td style="color: var(--amber);">Media/Alta</td>
+          </tr>
+          <tr>
+            <td><code>/financas/contacorrentelancamentos/</code></td>
+            <td>Conciliacao e livro-caixa</td>
+            <td>Detalhamento dos lancamentos</td>
+            <td style="color: var(--amber);">Media</td>
+          </tr>
+          <tr>
+            <td><code>/financas/caixa/</code></td>
+            <td>Previsto x realizado</td>
+            <td>Controle gerencial e orcamento</td>
+            <td style="color: var(--amber);">Media</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- BACKLOG POR FASES -->
+    <section class="section card">
+      <h2>6. Roadmap de implantacao por fases</h2>
+      <div class="steps" style="margin-top: 14px;">
+
+        <div class="step">
+          <div class="step-n">0</div>
+          <div>
+            <h3>Definicao funcional e contratos</h3>
+            <p>Fechar modelo-alvo antes da integracao ampla: mapa de entidades canonicas, regras de precedencia, perfis de acesso e KPIs.</p>
+            <p class="mini">Criterio de saida: modelo financeiro e regras aprovados.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">1</div>
+          <div>
+            <h3>Fundacao tecnica</h3>
+            <p>Criar Integration Gateway, Sync Control Plane, esquema de raw ingestion, segredos protegidos, logs estruturados e health checks.</p>
+            <p class="mini">Criterio de saida: OMIE conectada com sync controlado e auditavel.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">2</div>
+          <div>
+            <h3>Shadow Sync</h3>
+            <p>Ingerir dados da OMIE em paralelo sem trocar a operacao atual. Comparar com dados locais e gerar relatorio de divergencia.</p>
+            <p class="mini">Criterio de saida: consistencia minima validada.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">3</div>
+          <div>
+            <h3 style="color: var(--cyan);">Dashboard viva</h3>
+            <p>Trocar os cards executivos para leitura OMIE: saldo, pagar, receber, atrasados, vencendo e previsto x realizado.</p>
+            <p><span class="tag-cyan">Ganho rapido</span></p>
+            <p class="mini">Criterio de saida: dashboard principal lendo do framework.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">4</div>
+          <div>
+            <h3 style="color: var(--green);">Operacao financeira</h3>
+            <p>Ligar esteiras de pagar, receber, boleto, PIX, extrato e busca de titulos.</p>
+            <p class="mini">Criterio de saida: financeiro opera dentro da PRN em fluxos prioritarios.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">5</div>
+          <div>
+            <h3 style="color: var(--amber);">PRN x OMIE</h3>
+            <p>Reconciliacao entre PRN e OMIE, centro de excecoes, fila de tratamento, motivos e enriquecimento persistido.</p>
+            <p class="mini">Criterio de saida: divergencias tratadas como processo.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">6</div>
+          <div>
+            <h3 style="color: var(--purple);">Inteligencia financeira</h3>
+            <p>Forecast de caixa, alertas de anomalia, priorizacao de cobranca, risco por fornecedor/cliente e desvios por categoria.</p>
+            <p class="mini">Criterio de saida: PRN operando como cockpit financeiro.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GOVERNANCA -->
+    <section class="section card">
+      <h2>7. Governanca e seguranca</h2>
+      <div class="grid g2">
+        <div>
+          <h3>Regras do framework</h3>
+          <p>1. O frontend nunca fala direto com a OMIE.</p>
+          <p>2. Toda integracao passa por camada server-side.</p>
+          <p>3. Leitura operacional e analitica ficam separadas.</p>
+          <p>4. Todo sync tem run, step, cursor, status, erro e replay.</p>
+          <p>5. Todo enriquecimento PRN x OMIE e persistivel e auditavel.</p>
+          <p>6. Rollout em shadow mode antes de qualquer corte definitivo.</p>
+        </div>
+        <div>
+          <h3>Precedencia de dados</h3>
+          <p><strong>OMIE</strong> manda no operacional financeiro.</p>
+          <p><strong>PRN</strong> manda na leitura analitica e na auditoria cruzada.</p>
+          <p><strong>Dados locais atuais</strong> viram legado temporario ate migracao completa.</p>
+          <p class="mini" style="margin-top: 10px;">Toda acao relevante gera trilha: quem viu, quem tratou, qual motivo, quando e o que mudou.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;">
+        <h3>Schemas recomendados no Supabase</h3>
+        <div class="schema-flow" style="margin-top: 12px;">
+          <div class="schema-box" style="border-color: rgba(255,93,93,0.2);">
+            <h4 style="color: var(--red);">private</h4>
+            <p class="mini">Segredos, funcoes internas, staging</p>
+          </div>
+          <div class="schema-box" style="border-color: rgba(255,176,32,0.2);">
+            <h4 style="color: var(--amber);">integration</h4>
+            <p class="mini">Jobs, cursores, runs, logs tecnicos</p>
+          </div>
+          <div class="schema-box" style="border-color: rgba(255,176,32,0.2);">
+            <h4 style="color: var(--amber);">raw</h4>
+            <p class="mini">Payloads OMIE e staging bruto</p>
+          </div>
+          <div class="schema-box" style="border-color: rgba(78,163,255,0.25);">
+            <h4 style="color: var(--blue);">core</h4>
+            <p class="mini">Entidades financeiras normalizadas</p>
+          </div>
+          <div class="schema-box" style="border-color: rgba(155,123,255,0.25);">
+            <h4 style="color: var(--purple);">governance</h4>
+            <p class="mini">Reconciliacao, excecoes, auditoria</p>
+          </div>
+          <div class="schema-box" style="border-color: rgba(56,193,114,0.25);">
+            <h4 style="color: var(--green);">mart</h4>
+            <p class="mini">Projeoes analiticas e KPIs</p>
+          </div>
+          <div class="schema-box" style="border-color: rgba(53,212,255,0.25);">
+            <h4 style="color: var(--cyan);">api</h4>
+            <p class="mini">Views expostas ao frontend</p>
+          </div>
+        </div>
+        <div class="note" style="margin-top: 14px;">
+          <strong>private</strong>, <strong>raw</strong>, <strong>integration</strong> e partes de <strong>governance</strong> nao devem ser expostos ao cliente.
+          O app consome preferencialmente views estaveis no schema <strong>api</strong>, com RLS obrigatorio.
+        </div>
+      </div>
+    </section>
+
+    <!-- GANHOS RAPIDOS -->
+    <section class="section card">
+      <h2>8. Ganhos rapidos de alto impacto</h2>
+      <div class="note-green" style="margin-bottom: 16px;">
+        Se precisar mostrar valor logo no comeco, estas entregas geram impacto com menor esforco:
+      </div>
+      <div class="grid g3">
+        <div class="card" style="background: var(--panel-2); border-color: rgba(53,212,255,0.2);">
+          <h4 style="color: var(--cyan);">Resumo executivo do dia</h4>
+          <p class="mini">Usando <code>/financas/resumo/</code>, mostrar saldo, pagar, receber e atrasados em uma unica tela.</p>
+        </div>
+        <div class="card" style="background: var(--panel-2); border-color: rgba(53,212,255,0.2);">
+          <h4 style="color: var(--cyan);">Contas a pagar reais</h4>
+          <p class="mini">Usando <code>/financas/contapagar/</code>, titulos reais com vencimento e status atualizado.</p>
+        </div>
+        <div class="card" style="background: var(--panel-2); border-color: rgba(53,212,255,0.2);">
+          <h4 style="color: var(--cyan);">Extrato rapido</h4>
+          <p class="mini">Usando <code>/financas/extrato/</code>, saldo e ultimos movimentos por conta.</p>
+        </div>
+        <div class="card" style="background: var(--panel-2); border-color: rgba(53,212,255,0.2);">
+          <h4 style="color: var(--cyan);">Contas a receber reais</h4>
+          <p class="mini">Usando <code>/financas/contareceber/</code>, carteira de recebiveis com aging e cobranca.</p>
+        </div>
+        <div class="card" style="background: var(--panel-2); border-color: rgba(53,212,255,0.2);">
+          <h4 style="color: var(--cyan);">Visao de atrasos</h4>
+          <p class="mini">Titulos vencidos com priorizacao e alerta visual automatico.</p>
+        </div>
+        <div class="card" style="background: var(--panel-2); border-color: rgba(53,212,255,0.2);">
+          <h4 style="color: var(--cyan);">Base para conciliacao</h4>
+          <p class="mini">Contas correntes e lancamentos prontos para cruzamento com PRN.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RISCOS -->
+    <section class="section card">
+      <h2>9. Riscos e mitigacao</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Risco</th>
+            <th>Impacto</th>
+            <th>Mitigacao</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Drift de payload OMIE</td>
+            <td>Integracao quebra</td>
+            <td>Raw store, adapters versionados e replay seguro</td>
+          </tr>
+          <tr>
+            <td>Conflito entre dados locais e novo modelo</td>
+            <td>Inconsistencia na dashboard</td>
+            <td>Shadow sync, comparativo e corte por dominio</td>
+          </tr>
+          <tr>
+            <td>Mapeamento ruim de contrapartes/categorias</td>
+            <td>Excecao invisivel</td>
+            <td>Camada mestre + fila de excecao obrigatorio</td>
+          </tr>
+          <tr>
+            <td>Performance analitica sobre operacao</td>
+            <td>Dashboard lenta</td>
+            <td>Separar core e mart, materializacoes controladas</td>
+          </tr>
+          <tr>
+            <td>Exposicao indevida de dado sensivel</td>
+            <td>Risco de seguranca</td>
+            <td>Schemas privados, RLS e views controladas</td>
+          </tr>
+          <tr>
+            <td>Baixa adesao do time</td>
+            <td>Framework nao e usado</td>
+            <td>Rollout por perfil e por ganho rapido</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- CONCLUSAO -->
+    <section class="section" style="background: linear-gradient(135deg, rgba(78,163,255,0.10), rgba(155,123,255,0.08)); border: 1px solid var(--line); border-radius: 22px; padding: 30px;">
+      <h2>Conclusao</h2>
+      <p style="font-size: 16px;">
+        O <strong>Framework de Atualizacao do PRN Financeiro</strong> nao e so uma integracao com a OMIE.
+        Ele e a espinha dorsal que permite ao PRN Financeiro evoluir de painel para <strong>sistema operacional financeiro</strong>.
+      </p>
+      <p style="font-size: 16px;">
+        O caminho inteligente e:
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px;">
+        <div style="background: rgba(78,163,255,0.10); border-radius: 12px; padding: 14px; text-align: center;">
+          <strong>Primeiro</strong><br><span class="mini">Ingerir e normalizar com seguranca</span>
+        </div>
+        <div style="background: rgba(56,193,114,0.10); border-radius: 12px; padding: 14px; text-align: center;">
+          <strong>Depois</strong><br><span class="mini">Alimentar dashboard e operacao</span>
+        </div>
+        <div style="background: rgba(155,123,255,0.10); border-radius: 12px; padding: 14px; text-align: center;">
+          <strong>Por fim</strong><br><span class="mini">Auditar, reconciliar e inteligir</span>
+        </div>
+      </div>
+      <div class="note-green" style="margin-top: 18px;">
+        <strong>Em resumo:</strong> o framework transforma endpoints em processos, processos em filas e decisoes, excecoes em controle, e dados em acao priorizada.
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{
+  "warnings": {
+    "missing_sheet": {
+      "severity": "high",
+      "message": "Aba obrigat\u00f3ria n\u00e3o encontrada: {sheet}"
+    },
+    "missing_required_column": {
+      "severity": "high",
+      "message": "Coluna obrigat\u00f3ria n\u00e3o encontrada: {column} na aba {sheet}"
+    },
+    "summary_mismatch": {
+      "severity": "medium",
+      "message": "Valor do Resumo ({resumoValue}) diverge do calculado ({calculatedValue}) para {field}"
+    },
+    "unknown_account_alias": {
+      "severity": "low",
+      "message": "Conta corrente n\u00e3o mapeada: {account}"
+    },
+    "unknown_entity": {
+      "severity": "medium",
+      "message": "Entidade n\u00e3o reconhecida no escopo PRN: {entity}"
+    },
+    "invalid_date": {
+      "severity": "medium",
+      "message": "Data inv\u00e1lida encontrada: {date} na linha {row} da aba {sheet}"
+    },
+    "invalid_numeric": {
+      "severity": "medium",
+      "message": "Valor num\u00e9rico inv\u00e1lido: {value} na linha {row} da aba {sheet}"
+    },
+    "empty_required_value": {
+      "severity": "low",
+      "message": "Campo obrigat\u00f3rio vazio: {field} na linha {row} da aba {sheet}"
+    },
+    "possible_filtered_receipts": {
+      "severity": "low",
+      "message": "A aba Recebido pode estar com filtro ativo ({rowsFound} linhas encontradas)"
+    },
+    "history_outlier": {
+      "severity": "low",
+      "message": "Data fora do intervalo esperado no hist\u00f3rico: {date}"
+    },
+    "formula_value_missing": {
+      "severity": "medium",
+      "message": "C\u00e9lula de f\u00f3rmula sem valor calculado: {cell} na aba {sheet}"
+    },
+    "duplicate_entry": {
+      "severity": "low",
+      "message": "Poss\u00edvel entrada duplicada: {description} ({value}) na aba {sheet}"
+    },
+    "file_too_large": {
+      "severity": "high",
+      "message": "Arquivo excede o tamanho m\u00e1ximo de {maxSizeMB}MB: {filename} ({sizeMB}MB)"
+    },
+    "invalid_extension": {
+      "severity": "high",
+      "message": "Extens\u00e3o n\u00e3o suportada: {ext}. Use .xlsx"
+    },
+    "empty_file": {
+      "severity": "high",
+      "message": "Arquivo vazio ou corrompido: {filename}"
+    }
+  },
+  "errors": {
+    "missing_daily_file": {
+      "message": "Planilha di\u00e1ria n\u00e3o enviada"
+    },
+    "missing_history_file": {
+      "message": "Planilha hist\u00f3rica n\u00e3o enviada"
+    },
+    "parse_failed": {
+      "message": "Falha ao processar {fileType}: {reason}"
+    },
+    "no_valid_data": {
+      "message": "Nenhum dado v\u00e1lido encontrado na planilha {sheet}"
+    },
+    "internal_error": {
+      "message": "Erro interno do processamento: {reason}"
+    }
+  }
+}
